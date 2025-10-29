@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>自己紹介クイズ | シュート</title>
+  <meta name="description" content="自己紹介にもとづくミニクイズ" />
+  <style>
+    :root { --bg:#f7f7fb; --fg:#222; --acc:#2f6feb; --card:#fff; --muted:#666; --ok:#0a8f2f; --ng:#b00020;}
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      color:var(--fg); background:linear-gradient(180deg,#f0f3ff, var(--bg));
+      min-height:100svh; display:flex; align-items:center; justify-content:center; padding:24px;
+    }
+    .card{
+      width:min(780px,100%); background:var(--card); border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.08); padding:28px;
+    }
+    h1{margin:0 0 12px; font-size:clamp(22px,3.6vw,30px)}
+    p{color:var(--muted); margin:6px 0 14px}
+    .q{padding:14px; border:1px solid #e7e7ef; border-radius:12px; margin:12px 0}
+    .q legend{font-weight:700; margin-bottom:8px}
+    .actions{display:flex; gap:12px; margin-top:16px; flex-wrap:wrap}
+    button{
+      padding:12px 16px; border-radius:12px; border:none; background:var(--acc); color:#fff; font-weight:700;
+      box-shadow:0 6px 16px rgba(47,111,235,.3); cursor:pointer; transition:transform .05s ease;
+    }
+    button:active{ transform:translateY(1px); }
+    .link{display:inline-block; text-decoration:none; padding:10px 14px; border-radius:10px; background:#eef3ff; color:#1f4fc9; font-weight:600}
+    .result{margin-top:14px; font-weight:700}
+    .ok{color:var(--ok)} .ng{color:var(--ng)}
+    details{margin-top:8px}
+    .score-badge{display:inline-block; padding:6px 10px; border-radius:999px; background:#eef3ff; color:#1f4fc9; font-weight:700; margin-left:6px}
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <header>
+      <h1 id="title">自己紹介クイズ</h1>
+      <p>自己紹介ページ（index.html）の内容から出題。全問正解を目指してね！</p>
+    </header>
+
+    <form id="quizForm" aria-describedby="desc">
+      <fieldset class="q">
+        <legend>Q1. 私の名前は？</legend>
+        <label><input type="radio" name="q1" value="シュート" required> シュート</label><br>
+        <label><input type="radio" name="q1" value="タロウ"> タロウ</label><br>
+        <label><input type="radio" name="q1" value="ハナコ"> ハナコ</label>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Q2. 私の専門は？</legend>
+        <label><input type="radio" name="q2" value="リハビリテーション科医" required> リハビリテーション科医</label><br>
+        <label><input type="radio" name="q2" value="皮膚科医"> 皮膚科医</label><br>
+        <label><input type="radio" name="q2" value="小児科医"> 小児科医</label>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Q3. 好きなものとして正しい組み合わせは？</legend>
+        <label><input type="radio" name="q3" value="読書と筋トレ" required> 読書と筋トレ</label><br>
+        <label><input type="radio" name="q3" value="映画と囲碁"> 映画と囲碁</label><br>
+        <label><input type="radio" name="q3" value="旅行と料理"> 旅行と料理</label>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Q4. 興味がある領域は？</legend>
+        <label><input type="radio" name="q4" value="IoTデバイス" required> IoTデバイス</label><br>
+        <label><input type="radio" name="q4" value="天文学"> 天文学</label><br>
+        <label><input type="radio" name="q4" value="昆虫採集"> 昆虫採集</label>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit" aria-label="採点する">採点する</button>
+        <button type="button" id="retryBtn" aria-label="やり直す">やり直す</button>
+        <a class="link" href="index.html" aria-label="自己紹介ページに戻る">自己紹介に戻る</a>
+      </div>
+    </form>
+
+    <div id="result" class="result" aria-live="polite"></div>
+    <details>
+      <summary>答えを見る（ヒント）</summary>
+      <ul>
+        <li>Q1: シュート</li>
+        <li>Q2: リハビリテーション科医</li>
+        <li>Q3: 読書と筋トレ</li>
+        <li>Q4: IoTデバイス</li>
+      </ul>
+    </details>
+  </main>
+
+  <script>
+    // 正解セット
+    const answers = {
+      q1: "シュート",
+      q2: "リハビリテーション科医",
+      q3: "読書と筋トレ",
+      q4: "IoTデバイス",
+    };
+
+    const form = document.getElementById("quizForm");
+    const result = document.getElementById("result");
+    const retryBtn = document.getElementById("retryBtn");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let score = 0;
+      const total = Object.keys(answers).length;
+
+      for (const key of Object.keys(answers)) {
+        const chosen = form.elements[key].value;
+        if (chosen === answers[key]) score++;
+      }
+
+      const ok = score === total;
+      const msg = ok
+        ? `🎉 全問正解！ <span class="score-badge">${score}/${total}</span>`
+        : `結果：<span class="score-badge">${score}/${total}</span>（もう一度チャレンジ！）`;
+
+      result.innerHTML = msg;
+      result.className = "result " + (ok ? "ok" : "ng");
+      // ページ上部へ軽くスクロール
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    retryBtn.addEventListener("click", () => {
+      // ラジオ選択をクリア
+      for (const key of Object.keys(answers)) {
+        const radios = form.elements[key];
+        for (const r of radios) r.checked = false;
+      }
+      result.textContent = "";
+      result.className = "result";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
