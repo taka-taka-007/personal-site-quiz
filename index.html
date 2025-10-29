@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>自己紹介 | シュート</title>
+  <meta name="description" content="シュートの自己紹介ページ" />
+  <style>
+    :root { --bg:#f7f7fb; --fg:#222; --acc:#2f6feb; --card:#fff; --muted:#666; }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      color:var(--fg); background:linear-gradient(180deg,#f0f3ff, var(--bg));
+      min-height:100svh; display:flex; align-items:center; justify-content:center; padding:24px;
+    }
+    .card{
+      width:min(720px,100%); background:var(--card); border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.08); padding:32px;
+    }
+    h1{margin:0 0 8px; font-size:clamp(24px,3.6vw,32px)}
+    p{line-height:1.8; margin:8px 0; color:var(--muted)}
+    .tags{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 8px}
+    .tag{
+      padding:6px 10px; border-radius:999px; background:#eef3ff; color:#1f4fc9; font-size:14px; border:1px solid #dfe7ff;
+    }
+    .cta{
+      margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;
+    }
+    a.button{
+      appearance:none; text-decoration:none; padding:12px 16px; border-radius:12px; font-weight:600;
+      background:var(--acc); color:#fff; transition:transform .05s ease, box-shadow .2s ease;
+      box-shadow:0 6px 16px rgba(47,111,235,.3);
+    }
+    a.button:active{ transform:translateY(1px); }
+    footer{margin-top:24px; font-size:13px; color:#888}
+    ul{margin:8px 0 0 20px}
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <header>
+      <h1 id="title">こんにちは、シュートです。</h1>
+    </header>
+
+    <section aria-labelledby="about">
+      <h2 id="about" style="font-size:20px; margin:16px 0 6px;">自己紹介</h2>
+      <ul>
+        <li>私は<b>シュート</b>です。</li>
+        <li><b>リハビリテーション科医</b>です。</li>
+        <li><b>読書</b>と<b>筋トレ</b>が好きです。</li>
+        <li><b>IoTデバイス</b>に興味があります。</li>
+      </ul>
+      <div class="tags" aria-label="興味・関心タグ">
+        <span class="tag">Rehabilitation</span>
+        <span class="tag">Books</span>
+        <span class="tag">Workout</span>
+        <span class="tag">IoT</span>
+      </div>
+
+      <div class="cta">
+        <a class="button" href="quiz.html" aria-label="自己紹介クイズへ">自己紹介クイズに挑戦する</a>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> Shuto
+    </footer>
+  </main>
+
+  <script>
+    // フッターの年を自動更新
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
